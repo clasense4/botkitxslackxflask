@@ -19,6 +19,7 @@ def is_member(r, team_id, user_id):
     return r.sismember(team_id+':members', user_id)
 
 def both_member(r, team_id, user_id_sender, user_id_receiver):
-    sender_ok = r.sismember(team_id+':members', user_id_sender)
-    receiver_ok = r.sismember(team_id+':members', user_id_receiver)
+    sender_ok = is_member(r, team_id, user_id_sender)
+    receiver_ok = is_member(r, team_id, user_id_receiver)
+
     return sender_ok and receiver_ok

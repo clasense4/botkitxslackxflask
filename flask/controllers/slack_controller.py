@@ -8,13 +8,12 @@ class slack_controller:
 
     @valid_token
     def karma_send(self):
-        # try:
+        try:
             team_id = request.form['team_id']
             user_id_sender = request.form['user_id_sender']
             user_id_receiver = request.form['user_id_receiver']
 
             # Only for signed up user
-            print both_member(r, team_id, user_id_sender, user_id_receiver)
             if both_member(r, team_id, user_id_sender, user_id_receiver):
                 karma_user_id_sender = r.get(team_id+':'+user_id_sender+':karma:today')
                 from_karma_given = r.hget(team_id+':'+user_id_sender, 'karma_given')
@@ -25,6 +24,7 @@ class slack_controller:
                     transfer(pipe, team_id, user_id_sender, from_karma_given, user_id_receiver, target_karma_count)
 
                     return ok_response({
+                        'success' : True,
                         'sender' : {
                             'user_id' : user_id_sender,
                             'karma_left' : r.get(team_id+':'+user_id_sender+':karma:today')
@@ -36,14 +36,24 @@ class slack_controller:
                     })
                 else :
                     return ok_response({
+                        'success' : False,
+                        'error_code': 1,
                         'message':'Not enough karma'
                     })
-            else :
+            elif is_member(r, team_id, user_id_sender) == False :
                 return ok_response({
-                    'message':'Not Signed Up.'
+                    'success' : False,
+                    'error_code': 3,
+                    'message':'Sender is not signedup.'
                 })
-        # except Exception as e:
-        #     return error_response()
+            elif is_member(r, team_id, user_id_receiver) == False :
+                return ok_response({
+                    'success' : False,
+                    'error_code': 4,
+                    'message':'Receiver is not signedup.'
+                })
+        except Exception as e:
+            return error_response()
 
 
     @valid_token
@@ -64,6 +74,8 @@ class slack_controller:
                 })
             else :
                 return ok_response({
+                    'success' : False,
+                    'error_code': 5,
                     'message':'Not Signed Up.'
                 })
         except Exception as e:
@@ -101,6 +113,7 @@ class slack_controller:
             else :
                 return ok_response({
                     'success': False,
+                    'error_code': 2,
                     'message': 'Already signed up.'
                 })
         except Exception as e:

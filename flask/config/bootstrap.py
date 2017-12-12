@@ -7,5 +7,5 @@ app.config.from_object('config.env.Dev')
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 URL_PREFIX = '/v1'
-APP_KEY = '313354'
+APP_KEY = '123123123'
 DAILY_KARMA = 5
