@@ -4,6 +4,15 @@
 
 Building bot via botkit library and flask microframework to provide data.
 
+## Features
+
+1. User can invite bot to channel
+2. User can signup to play with bot
+3. User can see their points, and given points
+4. User can give points to another (but limited)
+5. User can see leaderboard
+6. *Bot can only give points if both user in same channel
+
 ## Requirements
 
 - NodeJS 8.9.3
