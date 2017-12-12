@@ -6,13 +6,13 @@ Building slack bot via [botkit](https://github.com/howdyai/botkit) library and [
 
 ### Why Flask and not express or "just code the logic there"?
 
-Currently, I have no experience with nodejs express. And I have some experience with flask, and possible to achieve 100% coverage.
+Currently, I have no experience with express. And I have some experience with flask, and possible to achieve 100% coverage.
 
-Well, previously I try to code inside botkit, but I think it will be better if I split with another service. In production, we can split those to different services, like utilizing AWS Lambda & Api Gateway for REST API. So, if REST API Service is down, the bot is not down, even it cannot use interactively, let say, the bot can send log to message pipline.
+Previously I try to code inside botkit, but I think it will be better if I split with another service. In production, we can split those to different services, like utilizing AWS Lambda & Api Gateway for REST API, host the bot on plain EC2, use Elasticache, etc. So, if REST API Service is down, the bot is not down, even it cannot use interactively, let say, the bot can send log to message pipline.
 
 ### Why Redis
 
-Redis will be use as primary data store. `String`, `Hash`, `Sets`, `Sorted Sets` Data Types is used.
+I think Redis is the easiest way to achieve goal of this projects and also Redis is really fast. `String`, `Hash`, `Sets`, `Sorted Sets` Data Types is used.
 
 Example :
 
@@ -25,8 +25,6 @@ Example :
 6) "T89MU6P6G:leaderboard" => Sorted Sets
 ```
 
-I think Redis is the easiest way to achieve goal of this projects and Redis is fast. 
-
 ## Features
 
 1. User can invite bot to channel
@@ -34,6 +32,25 @@ I think Redis is the easiest way to achieve goal of this projects and Redis is f
 3. User can see their points and given points
 4. User can give points to another (limited)
 5. User can see leaderboard
+
+## Commands
+
+- /invite @botname
+- @botname signup => IMPORTANT, only registered user
+- DM botname and type `karma` to receive this information
+```
+Karma Points Count = 5
+Karma Points Given = 0
+Karma Points Lefts = 5
+```
+- thanks @registeredUser => will send karma points, validation is included
+- @botname leaderboard / DM botname and type `leaderboard` => will send leaderboard
+```
+Leaderboard
+
+@User1 5 Points
+@User2 0 Points
+```
 
 ## Requirements
 
@@ -130,3 +147,18 @@ TOTAL                               105      0   100%
 Ran 16 tests in 0.164s
 
 OK
+```
+
+### Node
+
+Test for bot is still missing, but I planned to use [botkit-mock](https://github.com/gratifyguy/botkit-mock)
+
+## Todo
+
+1. Add nodejs test
+2. Better documentation
+3. Send bot log to file or service similar to aws kinesis firehose
+4. Better REST API Authentication, now still hardcoded
+5. Feature : User Achievements
+6. Feature : Add bot help command
+7. Feature : Detailed Leaderboard, ie. Daily / Weekly Leaderboard
