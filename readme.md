@@ -68,13 +68,22 @@ Leaderboard
 
 ### Python
 
-- `flask/config/bootstrap.py`
+Edit file `flask/config/bootstrap.py`, and change when necessary.
+
+### Cronjobs
+
+The cronjobs will be executed daily and its purpose is to restore daily karma points as we set at file `flask/config/bootstrap.py`. And add below to the crontab. (Use `crontab -e`).
+
+```
+0 0 * * * ~/botkitxslackxflask/flask/daily_points_cron.py
+```
 
 ## Installation
 
 ### Redis
 
 ```
+cd ~
 wget http://download.redis.io/releases/redis-4.0.6.tar.gz
 tar xzf redis-4.0.6.tar.gz
 cd redis-4.0.6
@@ -94,6 +103,9 @@ virtualenv -p /usr/local/bin/python2.7 ~/Envs/botkitxslackxflask
 # Activate virtualenv
 source ~/Envs/botkitxslackxflask/bin/activate
 
+# Clone the projects
+cd ~
+git clone git@github.com:clasense4/botkitxslackxflask.git
 cd ~/botkitxslackxflask
 cd flask
 pip install -r requirements.txt
@@ -115,11 +127,9 @@ tar xf node-v8.9.3-linux-x64.tar.xz
 alias node='/root/node-v8.9.3-linux-x64/bin/node'
 alias npm='/root/node-v8.9.3-linux-x64/bin/npm'
 
-git clone ...
-cd botkitxslackxflask
+cd ~/botkitxslackxflask
 cd botkit
 npm install
-
 cd src
 
 # Start the bot, change with your slack token
@@ -132,7 +142,7 @@ token=xoxb-axcasdas node slack_bot.js
 
 ### Python
 
-> Make sure redis is running
+> Make sure redis is running, and change `test.sh` file if necessary
 
 ```
 $> sh test.sh
@@ -161,10 +171,12 @@ Test for bot is still missing, but I planned to use [botkit-mock](https://github
 
 ## Todo
 
-1. Add nodejs test
-2. Add flexible configuration, now still hardcoded
-3. Send bot log to file or service similar to aws kinesis firehose
-4. Better REST API Authentication, now still hardcoded
-5. Feature : User Achievements
+1. Feature : Add nodejs test
+2. Feature : Add flexible configuration, now still hardcoded
+3. Feature : Send bot log to file or service similar to aws kinesis firehose
+4. Improvement :Better REST API Authentication, now still hardcoded
+5. Improvement : Better Flask Logging
 6. Feature : Add bot help command
 7. Feature : Detailed Leaderboard, ie. Daily / Weekly Leaderboard
+8. Feature : User Achievement
+9. Improvement : Better cronjob
