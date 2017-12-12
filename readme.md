@@ -64,6 +64,12 @@ Leaderboard
 - Slack Team
 - [Slack Bot Token](https://github.com/howdyai/botkit/blob/master/docs/readme-slack.md#getting-started)
 
+## Configuration
+
+### Python
+
+- `flask/config/bootstrap.py`
+
 ## Installation
 
 ### Redis
@@ -156,7 +162,7 @@ Test for bot is still missing, but I planned to use [botkit-mock](https://github
 ## Todo
 
 1. Add nodejs test
-2. Better documentation
+2. Add flexible configuration, now still hardcoded
 3. Send bot log to file or service similar to aws kinesis firehose
 4. Better REST API Authentication, now still hardcoded
 5. Feature : User Achievements
