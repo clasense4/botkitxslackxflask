@@ -1,0 +1,10 @@
+click==6.7
+coverage==4.4.2
+Flask==0.12.2
+Flask-Testing==0.6.2
+itsdangerous==0.24
+Jinja2==2.10
+MarkupSafe==1.0
+nose==1.3.7
+redis==2.10.6
+Werkzeug==0.13

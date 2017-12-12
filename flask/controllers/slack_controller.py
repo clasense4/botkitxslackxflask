@@ -1,43 +1,49 @@
-from config.bootstrap import r
+from config.bootstrap import r, DAILY_KARMA
 from decorators.headers import valid_token
-from utils.response_util import error_response, ok_response, transfer
+from utils.response_util import error_response, ok_response
+from utils.redis_util import transfer, signup, both_member, is_member
 from flask import g, request, Response
 
 class slack_controller:
 
     @valid_token
     def karma_send(self):
-        """
-        Send karma if ok, send error if karma is not enough
-        Need 3 params
-        """
-        try:
+        # try:
             team_id = request.form['team_id']
-            user_id_from = request.form['user_id_from']
-            user_id_target = request.form['user_id_target']
+            user_id_sender = request.form['user_id_sender']
+            user_id_receiver = request.form['user_id_receiver']
 
-            karma_user_id_from = r.get(team_id+':'+user_id_from+':karma:today')
+            # Only for signed up user
+            print both_member(r, team_id, user_id_sender, user_id_receiver)
+            if both_member(r, team_id, user_id_sender, user_id_receiver):
+                karma_user_id_sender = r.get(team_id+':'+user_id_sender+':karma:today')
+                from_karma_given = r.hget(team_id+':'+user_id_sender, 'karma_given')
+                target_karma_count = r.hget(team_id+':'+user_id_receiver, 'karma_count')
 
-            from_karma_given = r.hget(team_id+':'+user_id_from, 'karma_given')
-            target_karma_count = r.hget(team_id+':'+user_id_target, 'karma_count')
+                if ((int(karma_user_id_sender) - 1) >= 0):
+                    pipe = r.pipeline()
+                    transfer(pipe, team_id, user_id_sender, from_karma_given, user_id_receiver, target_karma_count)
 
-            if ((int(karma_user_id_from) - 1) >= 0):
-                pipe = r.pipeline()
-                transfer(pipe, team_id, user_id_from, from_karma_given, user_id_target, target_karma_count)
-                return ok_response({
-                    'from' : {
-                        'user_id' : user_id_from,
-                        'karma_left' : r.get(team_id+':'+user_id_from+':karma:today')
-                    },
-                    'target' : {
-                        'user_id' : user_id_target,
-                        'karma_count' : r.hget(team_id+':'+user_id_target,'karma_count')
-                    }
-                })
+                    return ok_response({
+                        'sender' : {
+                            'user_id' : user_id_sender,
+                            'karma_left' : r.get(team_id+':'+user_id_sender+':karma:today')
+                        },
+                        'receiver' : {
+                            'user_id' : user_id_receiver,
+                            'karma_count' : r.hget(team_id+':'+user_id_receiver,'karma_count')
+                        }
+                    })
+                else :
+                    return ok_response({
+                        'message':'Not enough karma'
+                    })
             else :
-                return ok_response({'message':'Not enough karma'})
-        except Exception as e:
-            return error_response()
+                return ok_response({
+                    'message':'Not Signed Up.'
+                })
+        # except Exception as e:
+        #     return error_response()
 
 
     @valid_token
@@ -46,14 +52,20 @@ class slack_controller:
             team_id = request.form['team_id']
             user_id = request.form['user_id']
 
-            karma_points_remaining = r.get(team_id+':'+user_id+':karma:today')
-            karma_points_count = r.hget(team_id+':'+user_id, 'karma_count')
-            karma_points_given = r.hget(team_id+':'+user_id, 'karma_given')
-            return ok_response({
-                'karma_points_count': karma_points_count,
-                'karma_points_given': karma_points_given,
-                'karma_points_remaining': karma_points_remaining
-            })
+            if is_member(r, team_id, user_id):
+                karma_points_remaining = r.get(team_id+':'+user_id+':karma:today')
+                karma_points_count = r.hget(team_id+':'+user_id, 'karma_count')
+                karma_points_given = r.hget(team_id+':'+user_id, 'karma_given')
+
+                return ok_response({
+                    'karma_points_count': karma_points_count,
+                    'karma_points_given': karma_points_given,
+                    'karma_points_remaining': karma_points_remaining
+                })
+            else :
+                return ok_response({
+                    'message':'Not Signed Up.'
+                })
         except Exception as e:
             return error_response()
 
@@ -68,6 +80,28 @@ class slack_controller:
 
             for lead in leaderboard:
                 top10.append(lead)
+
             return ok_response(top10)
+        except Exception as e:
+            return error_response()
+
+    @valid_token
+    def signup(self):
+        try:
+            team_id = request.form['team_id']
+            user_id = request.form['user_id']
+
+            if r.sadd(team_id+':members', user_id):
+                pipe = r.pipeline()
+                signup(pipe, team_id, user_id, DAILY_KARMA)
+
+                return ok_response({
+                    'success': True
+                })
+            else :
+                return ok_response({
+                    'success': False,
+                    'message': 'Already signed up.'
+                })
         except Exception as e:
             return error_response()

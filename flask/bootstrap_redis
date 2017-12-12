@@ -1,7 +1,1 @@
 flushdb
-hset T89MU6P6G:U8917CU0Y karma_count 0
-hset T89MU6P6G:U8917CU0Y karma_given 0
-set T89MU6P6G:U8917CU0Y:karma:today 5
-hset T89MU6P6G:U8BHP3V1D karma_count 0
-hset T89MU6P6G:U8BHP3V1D karma_given 0
-set T89MU6P6G:U8BHP3V1D:karma:today 5

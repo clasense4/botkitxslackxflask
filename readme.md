@@ -33,8 +33,6 @@ mkdir ~/Envs
 which python
 # Make sure python interpreter is correct
 virtualenv -p /usr/local/bin/python2.7 ~/Envs/botkitxslackxflask
-# If virtualenvwrapper is installed
-workon botkitxslackxflask
 
 # If virtualenvwrapper not installed
 source ~/Envs/botkitxslackxflask/bin/activate
@@ -81,26 +79,19 @@ token=xoxb-axcasdas node slack_bot.js
 ```
 $> sh test.sh
 OK
-(integer) 1
-(integer) 1
-OK
-(integer) 1
-(integer) 1
-OK
-.........
+..............
 Name                              Stmts   Miss  Cover
 -----------------------------------------------------
 controllers/__init__.py               0      0   100%
-controllers/slack_controller.py      40      0   100%
+controllers/slack_controller.py      54      0   100%
 decorators/__init__.py                0      0   100%
 decorators/headers.py                16      0   100%
 utils/__init__.py                     0      0   100%
-utils/response_util.py               18      0   100%
+utils/redis_util.py                  20      0   100%
+utils/response_util.py               10      0   100%
 -----------------------------------------------------
-TOTAL                                74      0   100%
+TOTAL                               100      0   100%
 ----------------------------------------------------------------------
-Ran 9 tests in 0.063s
+Ran 14 tests in 0.085s
 
 OK
-
-```
