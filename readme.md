@@ -60,7 +60,7 @@ Leaderboard
 - Python pip
 - Python Virtualenv
 - Redis 4.0.6
-- Linux Server
+- [Linux Server](https://www.digitalocean.com/?refcode=6b1c3b315e1e) 
 - Slack Team
 - [Slack Bot Token](https://github.com/howdyai/botkit/blob/master/docs/readme-slack.md#getting-started)
 
@@ -180,3 +180,5 @@ Test for bot is still missing, but I planned to use [botkit-mock](https://github
 7. Feature : Detailed Leaderboard, ie. Daily / Weekly Leaderboard
 8. Feature : User Achievement
 9. Improvement : Better cronjob
+10. Improvement : Send multiple karma points
+11. Feature : Add options to change "thanks" to another word / sentences / emoticon
