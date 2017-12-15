@@ -75,7 +75,7 @@ Edit file `flask/config/bootstrap.py`, and change when necessary.
 The cronjobs will be executed daily and its purpose is to restore daily karma points as we set at file `flask/config/bootstrap.py`. And add below to the crontab. (Use `crontab -e`).
 
 ```
-0 0 * * * ~/botkitxslackxflask/flask/daily_points_cron.py
+0 0 * * * source ~/Envs/botkitxslackxflask/bin/activate && python ~/botkitxslackxflask/flask/daily_points_cron.py
 ```
 
 ## Installation
